@@ -22,7 +22,13 @@ optional arguments:
                         first byte in range to search
   -e END, --end END     last byte in range to search
   -b BAD, --bad BAD     known bad characters (ex: `-b 00,0a,0d`)
+```
 
+Example:
+```
+> !py C:\Users\User\Desktop\find-bad-chars-windbg.py 0338f764 -b 0a,10
+[+] Consecutive bad chars (data possibly truncated), aborting...
+[+] Bad chars: 0x0b
 ```
 
 ## find-bad-chars-sc.py
@@ -73,7 +79,17 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+```
 
+Example:
+```
+> !py C:\Users\User\Desktop\find-function-iat.py module WriteProcessMemoryStub
+[-] Using KERNEL32!RaiseExceptionStub (couldn't find WriteProcessMemoryStub IAT address)
+[+] 0x1480d104 (RaiseExceptionStub IAT entry)
+[+] 0x74f06ee0 (RaiseExceptionStub resolved)
+[+] 0x74f22890 (WriteProcessMemoryStub resolved)
+[+] 0x1b9b0 (offset = WriteProcessMemoryStub - RaiseExceptionStub)
+[+] 0xfffe4650 (negative)
 ```
 
 ## rp++\_filter.py
@@ -85,7 +101,6 @@ Some nice features:
 * primarily searches first instruction (again to reduce redundancies)
 * allows you to specify last instruction (for ROP, JOP, COP, etc)
 * allows you to search all registers segments of a given register or a specific segment
-
 ```
 usage: rp++_filter.py [-h] --skip-lines SKIP_LINES [--exact] [--op1 OP1] [--op2 OP2] [--op3 OP3] [-i INSTR]
                       [-l {1,2,3,4,5,6,7,8,9,10}] [--last-instr {all,call,ret,retn,jmp}] [-b BAD_CHARS]
@@ -112,4 +127,17 @@ optional arguments:
                         specify last instruction - default: ret (includes retn)
   -b BAD_CHARS, --bad-chars BAD_CHARS
                         known bad characters, format: 00,01,02,03
+```
+
+Example:
+```
+$ python3 rp++_filter.py rp++_output.txt --skip-lines 10 -b 00,0a --instr mov --op1 eax --op2 ecx 
+0x10197333:  mov ah, ch ; adc byte [eax], dl ; add esp, 0x0C ; mulsd xmm0, xmm0 ; ret
+0x1013fd80:  mov al, byte [ecx+0x08] ; ret
+0x1014651d:  mov al, byte [edx+ecx+0x1B] ; mov byte [esi+0x01], al ; pop esi ; pop ebp ; ret
+0x1014bc30:  mov ax, cx ; pop ebp ; ret
+0x101a38cf:  mov byte [eax+eax+0x458B0000], ch ; or byte [ecx+0x40C03308], cl ; pop ebp ; ret
+0x101a38a9:  mov byte [eax+eax+0x458B0000], ch ; or byte [ecx+0x5DC03308], cl ; ret
+0x101a392f:  mov byte [eax-0x75000000], ch ; inc ebp ; or byte [ecx+0x40C03308], cl ; pop ebp ; ret
+[snip]
 ```

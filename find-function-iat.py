@@ -86,7 +86,7 @@ def main():
     print('[-] Using {} (couldn\'t find {} IAT address)'.format(resolver.alt_entry, args.func))
     print('[+] {} ({} IAT entry)'.format(hex(resolver.entries[resolver.alt_entry]['iat']), resolver.alt_entry[9:]))
     print('[+] {} ({} resolved)'.format(hex(resolver.entries[resolver.alt_entry]['resolved']), resolver.alt_entry[9:]))
-    print('[+] {} ({} resolved)'.format(args.func, hex(resolver.va_resolved)))
+    print('[+] {} ({} resolved)'.format(hex(resolver.va_resolved), args.func))
     print('[+] {} (offset = {} - {})'.format(hex(diff), args.func, resolver.alt_entry[9:]))
     print('[+] {} (negative)'.format(hex(neg)))
 
